@@ -10,6 +10,7 @@ Created on Oct 2023
 import numpy as np
 import matplotlib.pyplot as plt
 from skimage import io as skio
+from skimage import exposure
 
 import skimage.morphology as morpho
 from skimage.segmentation import watershed
@@ -254,23 +255,59 @@ plt.savefig(f'/home/leo/github/tadi-practical-work/TP-morpho/results/exsegm_4_wa
 im = skio.imread('/home/leo/github/tadi-practical-work/TP-morpho/Images/laiton.bmp')
 if len(im.shape)>2 and im.shape[2] == 3:
     im=grayscale_from_color(im)
+plt.title("Original image")
 plt.imshow(im, cmap="gray")
 plt.show()
+im_preprocessed = im
 
 # to remove some black circles in the image apply an opening followed by a closing
-# im = morpho.opening(im, strel("disk", 2))
-# im = morpho.closing(im, strel("disk", 1))
+im_preprocessed = morpho.opening(im_preprocessed, strel("disk", 1))
+im_preprocessed = morpho.closing(im_preprocessed, strel("disk", 1))
+im_preprocessed = morpho.opening(im_preprocessed, strel("disk", 1))
+
 # im = morpho.dilation(im, strel("disk", 1))
 # im = morpho.closing(im, strel("disk", 1))
-im = im - morpho.opening(im, strel("disk", 3)) # tophat
-im = morpho.closing(im, strel("disk", 3)) -im # bottomhat
-plt.imshow(im, cmap="gray")
+# im_preprocessed = im_preprocessed - morpho.opening(im_preprocessed, strel("disk", 1)) # tophat
+# im_preprocessed = morpho.closing(im_preprocessed, strel("disk", 1)) -im_preprocessed # bottomhat
+# remove some small black circles
+# im_preprocessed = morpho.erosion(im, strel("disk", 1))
+# im_preprocessed = im
+# plt.imshow(im_preprocessed, cmap="gray")
+# plt.show()
+
+
+# from skimage.filters.thresholding import threshold_otsu
+# # Calculate and apply threshold
+# thresh = threshold_otsu(im_preprocessed)
+# im_preprocessed = im_preprocessed > thresh
+# # convert from true to 1 and false to 0
+# im_preprocessed[im_preprocessed == True] = 1
+# im_preprocessed[im_preprocessed == False] = 0
+# im_preprocessed = im_preprocessed.astype(int)
+plt.title("Image preprocessed")
+plt.imshow(im_preprocessed, cmap="gray")
 plt.show()
+# # Generate the markers as local maxima of the distance to the background
+# from scipy import ndimage as ndi
+# distance = ndi.distance_transform_edt(im_preprocessed)
+# plt.title("distance")
+# plt.imshow(distance, cmap="gray")
+# plt.show()
+# coords = skf.peak_local_max(distance, footprint=np.ones((3, 3)), labels=im_preprocessed)
+# mask = np.zeros(distance.shape, dtype=bool)
+# mask[tuple(coords.T)] = True
+# markers, _ = ndi.label(mask)
+# # show markers
+# plt.title("markers")
+# plt.imshow(markers, cmap="gray")
+# plt.show()
+# labels = watershed(-distance, markers, mask=im_preprocessed)
 
 #compute gradient
-morpho_grad = morpho.dilation(im, strel("disk",2)) - morpho.erosion(im, strel("disk",1))
+morpho_grad = morpho.dilation(im_preprocessed, strel("disk",1)) - morpho.erosion(im_preprocessed, strel("disk",1))
 morpho_grad = np.int32(morpho_grad > 10) * morpho_grad # manual thresholding
-morpho_grad = morpho.closing(morpho_grad, strel("disk", 10))
+morpho_grad = morpho.closing(morpho_grad, strel("disk", 1))
+plt.title("Morphological gradient")
 plt.imshow(morpho_grad, cmap="gray")
 plt.show()
 
@@ -281,9 +318,11 @@ peak_mask = np.zeros_like(inverted_morpho_grad, dtype=bool)
 peak_mask[tuple(peak_idx_local_mini.T)] = True
 markers, _ = measure.label(peak_mask, return_num = True)
 
-# compute the watershed
+# # compute the watershed
 labels = watershed(morpho_grad, markers, watershed_line=True)
+plt.title("Watershed labels")
 plt.imshow(random_colors(labels))
+plt.show()
 
 # Visualization of the result
 segm = labels.copy()
@@ -295,11 +334,9 @@ for i in range(segm.shape[0]):
             segm[i, j] = 0
 # Superimposition of segmentation contours on the original image
 contourSup = np.maximum(segm, im)
+plt.title("Watershed segmentation")
 plt.imshow(contourSup, cmap="gray")
 plt.show()
 plt.savefig(f'/home/leo/github/tadi-practical-work/TP-morpho/results/exsegm_6_watershed_{shape}_{size}.png')
-
-
-
 
 # %%
