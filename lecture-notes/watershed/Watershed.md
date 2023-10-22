@@ -6,7 +6,7 @@ In the below image you can see the watershed line that is the line where a drop 
 If we have a gray level function we can easily find the 2 regional minima. A drop of water in the two maxima would go down to the catching basin (the regional minima) filling the catching basin. After you fill both the catching basin, the water in the two of them would reach the top and they merge. The line where the water merge is called watershed and it is a **continuous line**. 
 
 ![[images/Pasted image 20231013183318.png]]
-![[Pasted image 20231013183329.png]]
+![[images/Pasted image 20231013183329.png]]
 
 Watershed is important for segmentation because the typical problem that we have in edge detection is that we get segments on the edges but it is really difficult to have closed lines. With watershed this problem is solved by the definition itself.
 
