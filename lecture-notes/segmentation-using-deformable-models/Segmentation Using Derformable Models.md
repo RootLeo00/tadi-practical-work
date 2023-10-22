@@ -212,29 +212,29 @@ Note that we can extend this approach  it in more than 2 regions by using multip
 After we defined the phi, we defined more specifically for our case by:
 $$H(z) =
 \begin{cases}1 &if &z ≥ 0 \\0 &if &z < 0 \end{cases}$$with, $$H^′(z) = δ(z)$$
-$$⇒∫Γdl =∫I|∇H(φ)|dxdy =∫Iδ(φ)|∇φ|dxdy$$
+$$⇒∫_Γdl =∫_I|∇H(φ)|dxdy =∫_Iδ(φ)|∇φ|dxdy$$
 
 and we re-write the energy equation as:
-$$U(Γ, g , f ) =λ1∫ ∫I(f −g1)2H(φ)dxdy +λ2∫ ∫I(f −g2)2(1−H(φ))dxdy +ν∫Iδ(φ)|∇φ|dxdy$$
+$$U(Γ,g,f ) =λ_1∫∫I(f−g_1)^2H(φ)dxdy +λ_2∫∫I(f−g_2)^2(1−H(φ))dxdy +ν∫_Iδ(φ)|∇φ|dxdy$$
 What we did is transposing the integral of each singular region into the integral of the whole image:
-- the first term is !=0 only for the region R1
-- the second term is !=0 only for the region R2
-- the length of the contour applies for both of the regions, and it is defined as the norm of the gradient of the phi
-To minimize the energy U means calculating:
-$$g1 =∫I fH(φ)dxdy∫I H(φ)dxdy $$
-$$g2 =∫I f (1 − H(φ))dxdy∫I (1 − H(φ))dxdy$$
-$$∂φ∂t = δ(ϕ)[ν∇( ∇φ|∇φ| ) − λ1(f − g1)2 + λ2(f − g2)2]$$
+- the first term is $\neq0$ only for the region $R_1$
+- the second term is $\neq0$ only for the region $R_2$
+- the length of the contour applies for both of the regions, and it is defined as the norm of the gradient of the $φ$
+To minimize the energy $U$ means calculating:
+$$g_1 =\frac{∫_I fH(φ)dxdy}{∫_I H(φ)dxdy} $$
+$$g_2 =\frac{∫_I f(1 − H(φ))dxdy}{∫_I (1 − H(φ))dxdy}$$
+$$\frac{∂φ}{∂t} = δ(ϕ)[ν∇(\frac{∇φ}{|∇φ|}) − λ_1(f−g_1)^2 + λ_2(f − g_2)^2]$$
 In practice we get a smooth version of $\delta$ and $H$. It is a kind of competition of the different phis. It is an iterative scheme:
 - start from an initial partition
 - we make phi evolve, using the U equation
 - compute the average values
 - make phi evolve again
-- .... converge
+- .... convergence
 ![](Pasted%20image%2020231022172834.png)
 
 Example:
 ![](Pasted%20image%2020231022172853.png)
-Note that with 2 level sets functions (phi) we can derive 4 different regions. With 3 level sets functions we can derive 8 regions, .... But we don't get only even number of regions, but also odd number of regions because it can happen that a region disappears.
+Note that with 2 level sets functions $φ$ we can derive 4 different regions. With 3 level sets functions we can derive 8 regions, .... But we don't get only even number of regions, but also odd number of regions because it can happen that a region disappears.
 
 ![](Pasted%20image%2020231022172929.png)
 This shows that we don't need to have just 1 level set function for every objects but we could have multiple phi functions for each region we want to segment. We could need this when we want to segment regions that have really high curvature, so that we can optimize their segmentation by taking the intersection of different phis "contours".
@@ -243,38 +243,42 @@ This shows that we don't need to have just 1 level set function for every object
 ![](Pasted%20image%2020231022172955.png)
 Here there is an example where the $g_i$ is not constant. We express this more formally here:
 
-Let's take the example of an image where we have 2 different regions (aka, 2 different textures or 2 different distributions). We want to maximize the probability of this partition given the image informations. Given partition $P(Ω) = {Ωe , Ωi }$ , if we use bayes rules this probability that we want to maximize is proportional to the probability of the product of the likelihood (aka, the probability of the image, given the partition), the prior probability of the partition: $p(I |P(Ω))p(P(Ω))$.
-We want to compute these 2 terms sseparately:
-- For the prior probability of the partition P, we would modulate it as a regularization constant:
-$$p(P(Ω)) ∝ ν exp(−ν|C |), ν > 0$$
+Let's take the example of an image where we have 2 different regions (aka, 2 different textures or 2 different distributions). We want to maximize the probability of this partition given the image informations. Given partition $P(Ω) = {Ω_e , Ω_i }$ , if we use Bayes rules this probability that we want to maximize is proportional to the probability of the product of the likelihood (aka, the probability of the image, given the partition), the prior probability of the partition: $p(I |P(Ω))p(P(Ω))$.
+We want to compute these 2 terms separately:
+- For the prior probability of the partition $P$, we would modulate it as a regularization constant:
+$$p(P(Ω)) ∝ ν\:exp(−ν|C |), \;ν>0$$
 	So it would be a function of the length of the contour
 - For the likelihood, so the probability of the image I given the partition P, we can assume that it can be deomposed as a product over the two different regions. Assuming indipendence over each pixel (strong assumption), we can have a product of a probability of having a certain intensity according to a certain distribution for the region that we have chosen and the same probability of any other regions:
-	$$p(I |P(Ω)) = p(I |Ωe )p(I |Ωi ) = ∏x∈Ωepe (I (x), θe ) ∏x∈Ωipi (I (x), θi )$$
+	$$p(I|P(Ω)) = p(I|Ω_e)p(I|Ω_i ) = \prod_{x∈Ω_e}p_e(I(x),θ_e) \prod_{x∈Ω_i}p_i(I (x),θ_i)$$
 The posterial probability is just proportial to this product of the previous two terms:
-$$p(P(Ω)|I ) = ν exp(−ν|C |) ∏x∈Ωepe (I (x), θe ) ∏x∈Ωipi (I (x), θi )$$
+$$p(P(Ω)|I) = ν\;exp(−ν|C |) \prod_{x∈Ω_e}p_e(I(x),θ_e) \prod_{x∈Ω_i}p_i(I(x),θ_i)$$
 
 We can converge the previous probability function as an energy function, we just compute the $-log()$ of each term and sum them:
-$$E ({C , θe , θi }) = Ereg (C ) + Ee ({C , θe }) + Ei ({C , θi })$$
+$$E({C,θ_e,θ_i}) = E_{reg}(C)+E_e({C,θ_e})+E_i({C,θ_i})$$
 Where:
-$$Ereg (C ) = − log ν + ν|C |,
-Ee ({C , θe }) = − ∫
-x∈Ωe log pe (I (x), θe )dx
-Ei ({C , θi }) = − ∫
-x∈Ωi log pi (I (x), θi )dx$$
+$$\begin{cases}
+E_{reg}(C)=−logν+ν|C|\\
+E_e({C,θ_e})=−∫_{x∈Ω_e}log\,{p_e}(I(x),θ_e)dx\\
+E_i({C,θ_i})=−∫_{x∈Ω_i}log\,{p_i}(I(x),θ_i)dx
+\end{cases}
+$$
 
 This energy function depends on the contour (which is the same as before), but also on the distribution of each region (here there are 2 regions).
 
 The solution of this energy functions implies using the level-set method:
 - we introduce the level set function:
-$$φ : Ω → R, φ(x) > 0 in Ωe , φ(x) < 0 in Ωi and φ(x) = 0 on C .$$
+$$φ : Ω → \mathbb{R} \begin{cases}
+φ(x) > 0 &in &Ω_e \\
+φ(x) < 0 &in &Ω_i\\
+φ(x) = 0 &on &C\\
+\end{cases}$$
 - we use $φ$ as the "$C$" on the previous equations:
-  $$E (φ, θi , θe ) = Ereg (φ) + Ee (φ, θe ) + Ei (φ, θi )$$
-  $$Ereg (φ) = ν ∫
-x∈Ω δ(φ(x))|∇φ(x)|dx,
-Ee (φ, θe ) = − ∫
-x∈Ω H(φ(x)) log(pe (I (x), θe ))dx
-Ei (φ, θi ) = − ∫
-x∈Ω(1 − H(φ(x))) log(pi (I (x), θi ))dx$$
+  $$E(φ,θ_i,θ_e) = E_{reg}(φ) + E_e(φ,θ_e) + E_i(φ,θ_i)$$
+  $$\begin{cases}
+E_{reg}(φ) = ν∫_{x∈Ω} δ(φ(x))|∇φ(x)|dx\\
+E_e(φ,θ_e) = −∫_{x∈Ω} H(φ(x))\; log(p_e(I(x),θ_e))dx\\
+E_i(φ,θ_i) = −∫_{x∈Ω}(1 − H(φ(x)))\; log(p_i(I(x),θ_i))dx
+\end{cases}$$
 
 ![](Pasted%20image%2020231022175846.png)
 Here the graylevel distribution is different in every region, so we can learn these distribution and apply the algorithm according to each distribution.
