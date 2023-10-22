@@ -56,13 +56,13 @@ The method is starting from an initialization and then applying this scheme iter
 
 Let's look at some examples:
 This matrix A has only 5 non zero terms (in the case that alpha and beta are constants). If the contour are closed, we have a loop (in this case, there is a starting beta and an ending beta). It is a matrix with a lot of zeros so we could have problems during the inversion.
-![](Pasted%20image%2020231022150019.png)
+![](images/Pasted%20image%2020231022150019.png)
 If the contour is not close, we still have the same general terms (look at the rows), but there are changes in the corner of the matrix and we could have different expressions in the corner depending wethere the ending points are fixed or free.
-![](Pasted%20image%2020231022150504.png)
-![](Pasted%20image%2020231022150516.png)
+![](images/Pasted%20image%2020231022150504.png)
+![](images/Pasted%20image%2020231022150516.png)
 
 Example:
-![](Pasted%20image%2020231022150539.png)
+![](images/Pasted%20image%2020231022150539.png)
 On the left we have the starting point (aka, the initial position of the contour). On the right the final contour after applying the iterative scheme. Here it worked really well because we started from a contour that was very closed from what we wanted as output.
 
 Let's look at the external energies that we can use.
@@ -75,14 +75,14 @@ One way to solve these problem is to add some external forces suc as the balloon
 with $N(s)$ as the unit normal vector at $s$.
 If we use the balloon force we don't necessarily need the initialization very close to the searched object.
 Example:
-![](Pasted%20image%2020231022155639.png)
+![](images/Pasted%20image%2020231022155639.png)
 On the right: starting image, on the left: gradient
-![](Pasted%20image%2020231022155720.png)
+![](images/Pasted%20image%2020231022155720.png)
 Application of the minimization of the total energy with balloon force. Note that in the parts of the holes we do not have info for the total energy, but only the balloon force that tells the algorithm how regular should the segmentation be.
 
 #### Constraint on distance to some edges
 We can achieve the precedent result with a distance map: we want to force the contour to be as 0 distance.
-![](Pasted%20image%2020231022160032.png)
+![](images/Pasted%20image%2020231022160032.png)
 
 Distance map $D(x, y )$ ⇒ potential
 $$P_{dist}(x,y) = we^{−D(x,y)}$$
@@ -95,16 +95,16 @@ $$E =∫∫μ(u^2_x + u^2_y + v^2_x + v^2_y ) + |∇f(x,y)|^2|\vec{v} − ∇f(x
 where $f$ is the contour map. Specifically we want to minimize $E$ for $$\vec{v}(x,y) = (u(x, y), v(x,y))$$
 Note that we want that, looking at the last part of the equation, the term $\vec{v}$ to be closed as possible  (in terms of distance) to $∇f (x, y )$  when $∇f (x, y ) \neq 0$ and the first part $μ(u^2_x + u^2_y + v^2_x + v^2_y )$ is a regularization term that forces the diffused gradient to not be zero outside the contour.
 This equation is solved in the following iterative way:
-![](Pasted%20image%2020231022161001.png)
+![](images/Pasted%20image%2020231022161001.png)
 Example application:
 Normal method:
-![](Pasted%20image%2020231022161015.png)
+![](images/Pasted%20image%2020231022161015.png)
 We can see from the gradient map that the gradient is diverse from zero only near the true contour of the objects (and this is a problem) because the image is homogeneous inside and outside the object. If we don't use the gradient flow external force, we can see that the contour converges quite well near the true contour, but it fails in the strong concavity.
 Gradient flow:
-![](Pasted%20image%2020231022161333.png)
+![](images/Pasted%20image%2020231022161333.png)
 The gradient is not zero in homogeneous regions. In the right image we have an example where the initialization is pretty far from the true contour, but we can achieve really good results.
 Another example:
-![](Pasted%20image%2020231022161445.png)
+![](images/Pasted%20image%2020231022161445.png)
 It is even better than the balloon force.
 
 ### 3D parametric deformable models
@@ -147,18 +147,18 @@ where:
 - k is the mean curvature $k = div(\frac{∇ψ}{||∇ψ||})$: the divergence of the norm, so we have movement along the norm
 
 An example of $ψ$ is the distance map:
-![](Pasted%20image%2020231022164213.png)
+![](images/Pasted%20image%2020231022164213.png)
 
-![](Pasted%20image%2020231022164317.png)
+![](images/Pasted%20image%2020231022164317.png)
 
 The advantage is that we can always have a 0-level-set, without caring on the changes of the topology of the image. For instance, in the following image, we have the same object, but with different level sets:
-![](Pasted%20image%2020231022164525.png)
+![](images/Pasted%20image%2020231022164525.png)
 With the parametric approach it would have been difficult because we would have to create 2 parametrization on each level-set, while it is completely natural with the level-set approach.
-![](Pasted%20image%2020231022164821.png)
+![](images/Pasted%20image%2020231022164821.png)
 
-![](Pasted%20image%2020231022165036.png)
+![](images/Pasted%20image%2020231022165036.png)
 
-![](Pasted%20image%2020231022165056.png)
+![](images/Pasted%20image%2020231022165056.png)
 
 The counter part is that we cannot control the topology of the image.
 
@@ -275,27 +275,27 @@ E_e(φ,θ_e) = −∫_{x∈Ω} H(φ(x))\; log(p_e(I(x),θ_e))dx\\
 E_i(φ,θ_i) = −∫_{x∈Ω}(1 − H(φ(x)))\; log(p_i(I(x),θ_i))dx
 \end{cases}$$
 
-![](Pasted%20image%2020231022175846.png)
+![](images/Pasted%20image%2020231022175846.png)
 Here the graylevel distribution is different in every region, so we can learn these distribution and apply the algorithm according to each distribution.
 
 We can learn the distribution iteratevely:
-![](Pasted%20image%2020231022180001.png)
+![](images/Pasted%20image%2020231022180001.png)
 In each region we estimate the best approximate distribution and use it as parameter.
 
-![](Pasted%20image%2020231022180059.png)
+![](images/Pasted%20image%2020231022180059.png)
 
 We can add other constraints:
 #### Constraining deformable models by spatial relations (Olivier Colliot et al.)
 We can impose that the segmentation is similar to some shapes.
-![](Pasted%20image%2020231022180334.png)
+![](images/Pasted%20image%2020231022180334.png)
 
-![](Pasted%20image%2020231022180430.png)
+![](images/Pasted%20image%2020231022180430.png)
 For example here the gradient is not strong enough to express a strong contour, so we have a leak. Here we force the contour to have a certain type of shape.
 
 #### Retina imaging (ISEP and XV-XX)
 The idea to segment the vessel is that we want the two line to be parallel. That means that the thickness should not vary too much.
-![](Pasted%20image%2020231022180629.png)
+![](images/Pasted%20image%2020231022180629.png)
 
-![](Pasted%20image%2020231022180738.png)
-![](Pasted%20image%2020231022180813.png)
+![](images/Pasted%20image%2020231022180738.png)
+![](images/Pasted%20image%2020231022180813.png)
 
