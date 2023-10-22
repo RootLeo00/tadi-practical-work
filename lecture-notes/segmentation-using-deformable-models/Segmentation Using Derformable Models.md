@@ -191,13 +191,8 @@ Let's consider the case where we have an image with only 2 regions:
 with constant values $g1$ and $g2$. The following partition equation would be:
 $$U(Γ,g,f) = λ_1∫∫_{R_1}(f − g_1)^2dxdy + λ_2∫∫_{R_2}(f − g_2)^2dxdy + ν∫Γdl$$
 To solve this equation, we use this definition of level set:
-$$φ(x,y)
-\begin{cases}
-= 0 &on &Γ\\
->0 &in & R1 = int(Γ)\\
-< 0 &in &R2 = ext(Γ)
-\end{cases}
-$$
+$φ(x,y)\begin{cases}= 0 &on &Γ\\>0 &in & R1 = int(Γ)\\< 0 &in &R2 = ext(Γ)\end{cases}$
+
 where $φ$ is:
 - 0 on the contour (defined as $Γ(t) = {φ(t) = 0}$)
 - positive inside the region 
