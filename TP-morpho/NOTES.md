@@ -3,8 +3,8 @@ erosion inflates dark areas and deflates bright areas
 opening (anti-extensive=removes parts of an object) =    erosion + dilation --> darkens narrow bright zones
 closing (extensive=add parts of an object) = dilation + erosion --> brightens narrow dark zones
 
-dilation and opening deform conrners which are convex () on the bright side
-erosion and closing deform conrners which are convex () on the dark side
+dilation and opening deform corners which are convex () on the bright side
+erosion and closing deform cornners which are convex () on the dark side
 
 filters obtained by composing opening and closing can be used to remove objects smaller than the structuring element
 

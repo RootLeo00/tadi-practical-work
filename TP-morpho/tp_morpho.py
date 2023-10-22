@@ -5,9 +5,13 @@ Created on Tue Sep  4 10:23:50 2018
 Modified Oct 2020, Oct 2021, Oct 2023
 @author: Said Ladjal, Isabelle Bloch
 """
+######## Lab 1 - TADI - Sorbonne University #########
+#Students:
+#Caterina LEONELLI - 21306668
+#Kimia SADREDDINI - 21204837
+#####################################################
 
-#%% SECTION 1 -- inclusion of packages
-
+#%% inclusion of packages
 import numpy as np
 import platform
 import tempfile
@@ -22,8 +26,7 @@ from skimage.draw import line
 import skimage.feature as skf
 from scipy import ndimage as ndi
 
-#%% SECTION 2 -- Useful functions
-
+#%% Useful functions 
 def viewimage(im, normalize=True, MINI=0.0, MAXI=255.0):
     """
     This function displays the image in grayscale in GIMP. If GIMP is already open, it will be used.
@@ -157,75 +160,78 @@ structuring_elements_list= ['disk', 'diamond', 'square', 'line']
 sizes= [4,8]
 
 #%% load images
-
 # Binary images
 # im = skio.imread('cellbin.bmp')
 # im = skio.imread('cafe.bmp')
-
 # Gray-scale images
 #im = skio.imread('/home/leo/tadi/TP-morpho/Images/retina2.gif')
-
-#im = skio.imread('/home/leo/tadi/TP-morpho/Images/bat200.bmp')
-
+im = skio.imread('/home/leo/github/tadi-practical-work/TP-morpho/Images/bat200.bmp')
 #im = skio.imread('/home/leo/tadi/TP-morpho/Images/bulles.bmp')
 #im = grayscale_from_color(skio.imread('/home/leo/tadi/TP-morpho/Images/cailloux.png'))
 #im = grayscale_from_color(skio.imread('/home/leo/tadi/TP-morpho/Images/cailloux2.png'))
-im = skio.imread('/home/leo/tadi/TP-morpho/Images/laiton.bmp')
-
-# for retina2.gif 
-# print(im.shape)
-# im = im[0,:, :]
-# print(im.shape)
-
-    
+# im = skio.imread('/home/leo/tadi/TP-morpho/Images/laiton.bmp')
+   
 if len(im.shape)>2 and im.shape[2] == 3:
     im=grayscale_from_color(im)
     
 plt.imshow(im, cmap="gray", vmin=0, vmax=255)
 # viewimage(im) - Usable instead of plt.imshow if GIMP is installed.
 
+#%% SECTION 1 -- Mathematical morphology on gray-scale images
 
-#%% SECTION 3 -- Examples of functions for this work
-
+############# Section 1 - Question 1 ########################
 for struct_el in structuring_elements_list:
     for size in sizes:
         se = strel(struct_el, size)
 
         # Dilation
         dil = morpho.dilation(im, se)
+        plt.figure( figsize=(5,5))
         plt.imshow(dil, cmap="gray", vmin=0, vmax=255)
-        plt.savefig(f'/home/leo/tadi/TP-morpho/results/dil_{struct_el}_{size}.png')
-
+        plt.savefig(f'/home/leo/github/tadi-practical-work/TP-morpho/results/1/dil_{struct_el}_{size}.png')
         # Erosion
         ero = morpho.erosion(im, se)
+        plt.figure( figsize=(5,5))
         plt.imshow(ero, cmap="gray", vmin=0, vmax=255)
-        plt.savefig(f'/home/leo/tadi/TP-morpho/results/ero_{struct_el}_{size}.png')
+        plt.savefig(f'/home/leo/github/tadi-practical-work/TP-morpho/results/1/ero_{struct_el}_{size}.png')
 
         # Opening
         open = morpho.opening(im, se)
+        plt.figure( figsize=(5,5))
         plt.imshow(open, cmap="gray", vmin=0, vmax=255)
-        plt.savefig(f'/home/leo/tadi/TP-morpho/results/open_{struct_el}_{size}.png')
+        plt.savefig(f'/home/leo/github/tadi-practical-work/TP-morpho/results/1/open_{struct_el}_{size}.png')
 
         # Closing
         close = morpho.closing(im, se)
+        plt.figure( figsize=(5,5))
         plt.imshow(close, cmap="gray", vmin=0, vmax=255)
-        plt.savefig(f'/home/leo/tadi/TP-morpho/results/close_{struct_el}_{size}.png')
+        plt.savefig(f'/home/leo/github/tadi-practical-work/TP-morpho/results/1/close_{struct_el}_{size}.png')
 
-#%% SECTION 3.3.1 -- succession of a dilation by a square of size 3×3 and a dilation by a square of size 5 × 5 / opening
+#%% 
+############# Section 1 - Question 2 ########################
+## succession of a dilation by a square of size 3×3 and a dilation by a square of size 5 × 5 / opening
+
+#dilation 5x5
+dil = morpho.dilation(im, strel('square', 5))
+plt.figure( figsize=(5,5))
+plt.imshow(dil, cmap="gray", vmin=0, vmax=255)
+plt.savefig(f'/home/leo/github/tadi-practical-work/TP-morpho/results/1.3/ex1_dil_5.png')
 
 # successive dilations
 # Dilation 3x3
 dil = morpho.dilation(im, strel('square', 3))
 # Dilation 5x5
 dil = morpho.dilation(dil, strel('square', 5))
+plt.figure( figsize=(5,5))
 plt.imshow(dil, cmap="gray", vmin=0, vmax=255)
-plt.savefig(f'/home/leo/tadi/TP-morpho/results/ex3_successivedils_dil_{struct_el}_{size}.png')
+plt.savefig(f'/home/leo/github/tadi-practical-work/TP-morpho/results/1.3/ex3_successive_dil_3_5.png')
 
 # sum of dilations
 # Dilation 8x8
 dil = morpho.dilation(im, strel('square', 8))
+plt.figure( figsize=(5,5))
 plt.imshow(dil, cmap="gray", vmin=0, vmax=255)
-plt.savefig(f'/home/leo/tadi/TP-morpho/results/ex3_sumofdils_dil_{struct_el}_{size}.png')
+plt.savefig(f'/home/leo/github/tadi-practical-work/TP-morpho/results/1.3/ex3_sumof_dil_8.png')
 
 
 # successive openings
@@ -233,18 +239,23 @@ plt.savefig(f'/home/leo/tadi/TP-morpho/results/ex3_sumofdils_dil_{struct_el}_{si
 dil = morpho.opening(im, strel('square', 3))
 # Opening 5x5
 dil = morpho.opening(dil, strel('square', 5))
+plt.figure( figsize=(5,5))
 plt.imshow(dil, cmap="gray", vmin=0, vmax=255)
-plt.savefig(f'/home/leo/tadi/TP-morpho/results/ex3_successiveopen_open_{struct_el}_{size}.png')
+plt.savefig(f'/home/leo/github/tadi-practical-work/TP-morpho/results/1.3/ex3_successiveopen_open_3_5.png')
 
 # sum of openings
 # Opening 8x8
 dil = morpho.opening(im, strel('square', 8))
+plt.figure( figsize=(5,5))
 plt.imshow(dil, cmap="gray", vmin=0, vmax=255)
-plt.savefig(f'/home/leo/tadi/TP-morpho/results/ex3_sumofopen_open_{struct_el}_{size}.png')
+plt.savefig(f'/home/leo/github/tadi-practical-work/TP-morpho/results/1.3/ex3_sumof_open_8.png')
 
 
-#%% Top-hat transform
-im = skio.imread('/home/leo/tadi/TP-morpho/Images/retina2.gif')
+#%% 
+############# Section 1 - Question 4 ########################
+## Apply a top-hat transform (difference of the original image and its opening), for instance on image retina2.gif.
+
+im = skio.imread('/home/leo/github/tadi-practical-work/TP-morpho/Images/retina2.gif')
 print(im.shape)
 im = im[0,:, :]
 print(im.shape)
@@ -257,41 +268,19 @@ for struct_el in structuring_elements_list:
             for angle in angles:
                 se = strel(struct_el, size, angle)
                 ch = im - morpho.opening(im, se)
+                plt.figure( figsize=(5,5))
                 plt.imshow(ch, cmap="gray", vmin=0, vmax=255)
-                plt.savefig(f'/home/leo/tadi/TP-morpho/results/ex4_tophat_{struct_el}_{size}_{angle}.png')
+                plt.savefig(f'/home/leo/github/tadi-practical-work/TP-morpho/results/1.4/ex4_tophat_{struct_el}_{size}_{angle}.png')
         
         else:
                 se = strel(struct_el, size)
                 ch = im - morpho.opening(im, se)
+                plt.figure( figsize=(5,5))
                 plt.imshow(ch, cmap="gray", vmin=0, vmax=255)
-                plt.savefig(f'/home/leo/tadi/TP-morpho/results/ex4_tophat_{struct_el}_{size}.png')
+                plt.savefig(f'/home/leo/github/tadi-practical-work/TP-morpho/results/1.4/ex4_tophat_{struct_el}_{size}.png')
+#%% 
+## What would be the dual operation (that you can illustrate on image laiton.bmp)
 
-# %%  
-# interesting result: take all the image results of a top-hat of the same image with the same structuring element line, size but different angles, compute the max of all of them for each pixel 
-# and then display the result. It's a bit like a top-hat with a line of size 20 but with a better result.
-im = skio.imread('/home/leo/tadi/TP-morpho/Images/retina2.gif')
-print(im.shape)
-im = im[0,:, :]
-print(im.shape)
-
-shape= 'line'
-size = 10
-ch= []
-for angle in angles:
-    se = strel(shape, size, angle)
-    ch.append(im - morpho.opening(im, se))
-
-# for every image in ch (ch is a list of images), take the max of all the images for each pixel
-i = range (0, len(ch))
-for i in range (0, len(ch)):
-    if i == len(ch)-1:
-        break
-    else:
-        res= np.maximum(ch[i], ch[i+1])
-plt.imshow(res, cmap="gray", vmin=0, vmax=255)
-plt.savefig(f'/home/leo/tadi/TP-morpho/results/ex4_tophat_max_{struct_el}_{size}_{angle}.png')
-
-#%% - dual operation: bottom-hat transform
 im = skio.imread('/home/leo/tadi/TP-morpho/Images/laiton.bmp')
 if len(im.shape)>2 and im.shape[2] == 3:
     im=grayscale_from_color(im)
@@ -312,10 +301,29 @@ for struct_el in structuring_elements_list:
                 ch =  morpho.closing(im, se) -im
                 plt.imshow(ch, cmap="gray", vmin=0, vmax=255)
                 plt.savefig(f'/home/leo/tadi/TP-morpho/results/ex4_bottomhat_{struct_el}_{size}.png')
+# %%  
+############# Section 1 - Question 5 ########################
+## interesting result: take all the image results of a top-hat of the same image with the same structuring element line, size but different angles, compute the max of all of them for each pixel 
+## and then display the result. It's a bit like a top-hat with a line of size 20 but with a better result.
+im = skio.imread('/home/leo/github/tadi-practical-work/TP-morpho/Images/retina2.gif')
+print(im.shape)
+im = im[0,:, :]
+print(im.shape)
+
+shape= 'line'
+size = 10
+ch= []
+for angle in angles:
+    se = strel(shape, size, angle)
+    ch.append(im - morpho.opening(im, se))
+
+res=np.maximum.reduce(ch)
+plt.imshow(res, cmap="gray", vmin=0, vmax=255)
+plt.savefig(f'/home/leo/github/tadi-practical-work/TP-morpho/results/1.5/ex1.4_tophat_max_{struct_el}_{size}.png')
+
 
 # %%  
-# interesting result: take all the image results of a bottom-hat of the same image with the same structuring element line, size but different angles, compute the max of all of them for each pixel 
-# and then display the result. It's a bit like a bottom-hat with a line of size 20 but with a better result.
+## Continue ...
 im = skio.imread('/home/leo/tadi/TP-morpho/Images/laiton.bmp')
 if len(im.shape)>2 and im.shape[2] == 3:
     im=grayscale_from_color(im)
@@ -338,86 +346,38 @@ for i in range (0, len(ch)):
 plt.imshow(res, cmap="gray", vmin=0, vmax=255)
 plt.savefig(f'/home/leo/tadi/TP-morpho/results/ex4_bottomhat_max_{struct_el}_{size}_{angle}.png')
 
-
-#%% Section 4: top hat
-im = skio.imread('/home/leo/tadi/TP-morpho/Images/retina2.gif')
-print(im.shape)
-im = im[0,:, :]
-print(im.shape)
-
-t = 10
-se = strel('line', t, -45)
-ch = im - morpho.opening(im, se)
-plt.imshow(ch, cmap="gray", vmin=0, vmax=255)
-
-
-
-
-#%% Section 5: apply an opening with each of them as structuring
-# element, and compute the point-wise maximum of the results
-im = skio.imread('/home/leo/tadi/TP-morpho/Images/retina2.gif')
-print(im.shape)
-im = im[0,:, :]
-print(im.shape)
-
+#%% 
+########### SECTION 2 -- Alternate sequential filters ##############
+im2 = skio.imread('/Users/kimia/Projects/TADI/Images/bat200.bmp')
+imt2 = im2.copy()
+N = 5
+structuring_elements_list= ['disk', 'diamond', 'square'] 
+morpho_operations = [morpho.closing , morpho.opening , morpho.dilation , morpho.erosion ]
 angles = [0, 45, 90, 135]
-shape= 'line'
-size = 10
-ch= []
-for angle in angles:
-    se = strel(shape, size, angle)
-    ch.append(morpho.opening(im, se))
+for struct_el in structuring_elements_list:
+    for k in range(1,N):
+        se = strel(struct_el, k)
+        for operation1 in morpho_operations:
+            for operation2 in morpho_operations:
+                if operation1 != operation2:
+                        imt2 = operation1(operation2(imt2, se), se)
+                        plt.imshow(imt2, cmap="gray", vmin=0, vmax=255)
+                        plt.savefig(f'/Users/kimia/Projects/TADI/Results_2/{operation1}.{operation2}_{struct_el}_{k}.png')
+                        
+#for Line
+for k in range(1,N):
+    for a in angles:
+        sel = strel('line', k , a)
+        for operation1 in morpho_operations:
+            for operation2 in morpho_operations:
+                if operation1 != operation2:
+                    imt2 = operation1(operation2(imt2, sel), sel)
+                    plt.imshow(imt2, cmap="gray", vmin=0, vmax=255)
+                    plt.savefig(f'/Users/kimia/Projects/TADI/Results_2/{operation1}.{operation2}._line_{k}_{a}.png')
 
-# for every image in ch (ch is a list of images), take the max of all the images for each pixel
-res = ch[0]
-for i in range (0, len(ch)-1):
-    print("compute max on res", i, "ch", i+1)
-    res= np.maximum(res[i-1], ch[i+1])
-plt.imshow(res, cmap="gray", vmin=0, vmax=255)
-plt.savefig(f'/home/leo/tadi/TP-morpho/results/ex5_open_max_{struct_el}_{size}_{angle}.png')
-
-
-
-
-#%% Alternate sequential filter
-im = skio.imread('/home/leo/tadi/TP-morpho/Images/retina2.gif')
-imt = im.copy()
-N = 3
-for k in range(N):
-    se = strel('disk', k)
-    imt = morpho.closing(morpho.opening(imt, se), se)
-plt.imshow(imt, cmap="gray", vmin=0, vmax=255)
-
-#%% Watersheds
-# im = skio.imread('Images/bat200.bmp')
-se = morpho.disk(1)
-
-grad = morpho.dilation(im, se) - morpho.erosion(im, se)
-grad = np.int32(grad > 40) * grad
-plt.imshow(grad, cmap="gray")
-
-local_mini = skf.peak_local_max(255 - grad, indices=False)
-markers = ndi.label(local_mini)[0]
-plt.imshow(local_mini, cmap="gray")
-
-labels = watershed(grad, markers, watershed_line=True)
-plt.imshow(random_colors(labels))
-# viewimage_color(random_colors(labels)) - Usable if GIMP is installed
-
-# Visualization of the result
-segm = labels.copy()
-for i in range(segm.shape[0]):
-    for j in range(segm.shape[1]):
-        if segm[i, j] == 0:
-            segm[i, j] = 255
-        else:
-            segm[i, j] = 0
-# Superimposition of segmentation contours on the original image
-contourSup = np.maximum(segm, im)
-plt.imshow(contourSup, cmap="gray")
-
-#%% Reconstruction
-im = skio.imread('Images/retina2.gif')
+#%% SECTION 3 -- Reconstruction
+############# Section 3 - Question 1 ########################
+im = skio.imread('/home/leo/github/tadi-practical-work/TP-morpho/Images/retina2.gif')
 # for retina2.gif 
 print(im.shape)
 im = im[0,:, :]
@@ -426,5 +386,58 @@ print(im.shape)
 se4 = strel('disk', 4)
 open4 = morpho.opening(im, se4)
 reco = morpho.reconstruction(open4, im)
+plt.title('Reconstruction by dilation')
 plt.imshow(reco, cmap="gray")
-# %%
+plt.savefig(f'/home/leo/github/tadi-practical-work/TP-morpho/results/3.1/open_recon_disk4_retina.png')
+
+#%% 
+############# Section 3 - Question 3 ########################
+## Add a reconstruction operation at each step of the alternate sequential filter 
+#(reconstruction by dilation after each opening and reconstruction by erosion after each closing)
+save_path_3 = '/home/leo/github/tadi-practical-work/TP-morpho/results/3.3/'
+im3 = skio.imread('/home/leo/github/tadi-practical-work/TP-morpho/Images/retina2.gif')
+print(im3.shape)
+im3 = im3[0,:, :]
+print(im3.shape)
+N = 11
+angles = [0, 45, 90, 135]
+
+struct_el = 'disk'
+for k in range(1,N,2):
+    se = strel(struct_el, k)
+    im4 = morpho.reconstruction(morpho.opening(im3, se) , im3)
+    im5 = morpho.reconstruction(morpho.closing(im4, se) , im4 , method='erosion')
+    plt.figure( figsize=(5,5))
+    plt.imshow(im5, cmap="gray", vmin=0, vmax=255)
+    plt.savefig(f'{save_path_3}opening.closing.reco_disk_{k}.png')
+        
+struct_el = 'diamond'
+for k in range(1,N,2):
+    se = strel(struct_el, k)
+    im4 = morpho.reconstruction(morpho.opening(im3, se) , im3)
+    im5 = morpho.reconstruction(morpho.closing(im4, se) , im4 , method='erosion')
+    plt.figure( figsize=(5,5))
+    plt.imshow(im5, cmap="gray", vmin=0, vmax=255)
+    plt.savefig(f'{save_path_3}opening.closing.reco_diamond_{k}.png')      
+        
+struct_el = 'square'
+for k in range(1,N,2):
+    se = strel(struct_el, k)
+    im4 = morpho.reconstruction(morpho.opening(im3, se) , im3)
+    im5 = morpho.reconstruction(morpho.closing(im4, se) , im4 , method='erosion')
+    plt.figure( figsize=(5,5))
+    plt.imshow(im5, cmap="gray", vmin=0, vmax=255)
+    plt.savefig(f'{save_path_3}opening.closing.reco_square_{k}.png')
+        
+N=20
+struct_el = 'line'
+for k in range(5,N, 5):
+    for a in angles:
+        se = strel(struct_el, k , a)
+        im4 = morpho.reconstruction(  morpho.opening(im3, se), im3)
+        im5 = morpho.reconstruction(morpho.closing(im4, se) , im4 , method='erosion')
+        plt.imshow(im5, cmap="gray", vmin=0, vmax=255)
+        plt.savefig(f'{save_path_3}opening.closing.reco_line_{k}_{a}.png')
+#%% SECTION 4 -- Segmentation
+############# Code in differant file (tp_morpho_segmentatin.py) #######################
+
