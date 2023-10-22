@@ -1,7 +1,7 @@
 This is a geographical analogy.
 In the below image you can see the watershed line that is the line where a drop a water would go toward on steep or the other. 
 
-![[./images/Pasted image 20231013183226.png]]
+![](./images/Pasted%20image%2020231013183226.png)
 
 If we have a gray level function we can easily find the 2 regional minima. A drop of water in the two maxima would go down to the catching basin (the regional minima) filling the catching basin. After you fill both the catching basin, the water in the two of them would reach the top and they merge. The line where the water merge is called watershed and it is a **continuous line**. 
 
